@@ -20,7 +20,7 @@ jobs:
         run: dotnet build Adder.UnitTests/Adder.UnitTests.csproj
 
       - name: Test
-        run: dotnet test Adder.UnitTests/Adder.UnitTests.csproj --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/Coverage/
+        run: dotnet test ~/Adder.UnitTests/Adder.UnitTests.csproj --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/Coverage/
 
       - name: Generate Coverage Report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.0.0
