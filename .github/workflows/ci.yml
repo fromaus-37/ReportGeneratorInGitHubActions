@@ -19,13 +19,13 @@ jobs:
       - name: Build
         run: dotnet build Adder.UnitTests/Adder.UnitTests.csproj
 
+      # Each `run` keyword represents a new process and shell so I would execute
+      # all commands in the same step and `run` attribute as a multi-line command
       - name: Test
-          # Each `run` keyword represents a new process and shell so I would execute
-          # all commands in the same step and `run` attribute as a multi-line command
-          run: |
-            dotnet test Adder.UnitTests/Adder.UnitTests.csproj --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,lcov
-            mkdir CoverageDataFiles
-            cp Adder.UnitTests/TestResults/**/*.* CoverageDataFiles
+        run: |
+          dotnet test Adder.UnitTests/Adder.UnitTests.csproj --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,lcov
+          mkdir CoverageDataFiles
+          cp Adder.UnitTests/TestResults/**/*.* CoverageDataFiles
 
         # run: dotnet test Adder.UnitTests/Adder.UnitTests.csproj --no-build --verbosity normal /p:CollectCoverage=true /#p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/Coverage/
 
