@@ -55,4 +55,4 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         uses: EndBug/add-and-commit@v9
         with:
-          add: .github/badges/*coverage_badge.svg
+          add: ".github/badges/*coverage_badge.svg"
