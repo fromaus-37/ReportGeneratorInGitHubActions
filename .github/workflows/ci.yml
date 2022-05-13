@@ -50,8 +50,6 @@ jobs:
           cp coveragereport/badge_branchcoverage.svg .github/badges/branchcoverage_badge.svg
 
       - name: Store coverage badge in repo
-
-      - name: Store coverage badge in repo
         if: ${{ github.event_name == 'pull_request' }}
         uses: EndBug/add-and-commit@v7
         with:
