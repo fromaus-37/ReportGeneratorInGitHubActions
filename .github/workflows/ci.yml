@@ -52,7 +52,7 @@ jobs:
       - name: Store coverage badge in repo
         uses: EndBug/add-and-commit@v7
         with:
-          add: ".github/badges/*coverage_badge.svg"
+          add: ".github/badges/*coverage_badge.svg --force"
 
       # here we are ok to run only on pull_request as the artifacts genrated by this step will
       # be used in the sticky comment that is meant only to be place din pull request.
@@ -67,6 +67,7 @@ jobs:
           echo -e '\n\n[Workflow run summary with link to artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) (contains HTML coverage report)' >> coveragereport/ModifiedSummary.md
 
       # This also appears in workflow that doesn't write out badges
+
       # in PR but have included it again as file name is different
       # (ModifiedSummary.md instead of Summary.md)
       - name: Publish coverage summary
