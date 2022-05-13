@@ -12,8 +12,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
@@ -50,6 +48,8 @@ jobs:
           mkdir -p .github/badges
           cp coveragereport/badge_linecoverage.svg .github/badges/linecoverage_badge.svg
           cp coveragereport/badge_branchcoverage.svg .github/badges/branchcoverage_badge.svg
+
+      - name: Store coverage badge in repo
 
       - name: Store coverage badge in repo
         if: ${{ github.event_name == 'pull_request' }}
