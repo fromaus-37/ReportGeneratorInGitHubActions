@@ -2,22 +2,55 @@ name: .NET
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   buildAndTest:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: 6.0.x    
-    - name: Build
-      run: dotnet build Adder.UnitTests/Adder.UnitTests.csproj
-    - name: Test
-      run: dotnet test Adder.UnitTests/Adder.UnitTests.csproj --no-build --verbosity normal
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+      - name: Build
+        run: dotnet build Adder.UnitTests/Adder.UnitTests.csproj
+
+      # Each `run` keyword represents a new process and shell so I would execute
+      # all commands related to test in the same step and `run` attribute as a multi-line command
+      - name: Test
+        run: |
+          dotnet test Adder.UnitTests/Adder.UnitTests.csproj --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,lcov
+          mkdir CoverageDataFiles
+          cp Adder.UnitTests/TestResults/**/*.* CoverageDataFiles
+
+        # run: dotnet test Adder.UnitTests/Adder.UnitTests.csproj --no-build --verbosity normal /p:CollectCoverage=true /#p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/Coverage/
+
+      - name: Generate Coverage Report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.0.0
+        with:
+          reports: "./CoverageDataFiles/coverage.cobertura.xml"
+          targetdir: "coveragereport"
+          reporttypes: "HtmlInline;Cobertura;MarkdownSummary;Badges"
+
+      - name: Upload ReportGenerator report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ReportGenerator coverage report
+          path: coveragereport/
+
+      - name: copy coverage badge to .github
+        run: |
+          mkdir -p .github/badges
+          cp coveragereport/badge_linecoverage.svg .github/badges/linecoverage_badge.svg
+          cp coveragereport/badge_branchcoverage.svg .github/badges/branchcoverage_badge.svg
+
+      - name: Store coverage badge in repo
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: EndBug/add-and-commit@v7
+        with:
+          add: ".github/badges/*coverage_badge.svg"
