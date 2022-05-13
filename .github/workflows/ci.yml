@@ -20,7 +20,7 @@ jobs:
         run: dotnet build Adder.UnitTests/Adder.UnitTests.csproj
 
       # Each `run` keyword represents a new process and shell so I would execute
-      # all commands in the same step and `run` attribute as a multi-line command
+      # all commands related to test in the same step and `run` attribute as a multi-line command
       - name: Test
         run: |
           dotnet test Adder.UnitTests/Adder.UnitTests.csproj --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,lcov
@@ -47,12 +47,6 @@ jobs:
           mkdir -p .github/badges
           cp coveragereport/badge_linecoverage.svg .github/badges/linecoverage_badge.svg
           cp coveragereport/badge_branchcoverage.svg .github/badges/branchcoverage_badge.svg
-
-      - name: Store coverage badge in repo
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: EndBug/add-and-commit@v7
-        with:
-          add: .github/badges/*coverage_badge.svg
 
       - name: Store coverage badge in repo
         if: ${{ github.event_name == 'pull_request' }}
