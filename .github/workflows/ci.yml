@@ -54,10 +54,8 @@ jobs:
         with:
           add: ".github/badges/*coverage_badge.svg"
 
-      # The next action, if run on push to main, would output an incorrect URL for the coverage badge
-      # because it uses github.head_ref to get name of the source branch of the pull request
-      # This particular property of the context `github` is only available if the
-      # workflow was triggred on events pull_request or pull_request_target
+      # here we are ok to run only on pull_request as the artifacts genrated by this step will
+      # be used in the sticky comment that is meant only to be place din pull request.
       - name: Modify coverage summary to include badge and link to artifact (pull request version)
         if: ${{ github.event_name == 'pull_request' }}
         run: |
